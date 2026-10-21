@@ -1,0 +1,96 @@
+def wrong_add_function_with_print(arg1, arg2):
+    arg1_index = 0
+    while arg1_index < len(arg1):
+        arg_2_sum = 0
+        for arg2_elements in arg2:
+            print(f" we are making an error in the loop. The correct answer is supposed to be: [2,3,4]")
+            arg_2_sum = sum([arg1[arg1_index] + i for i in arg2])
+            arg1[arg1_index] = arg_2_sum
+            arg1_index += 1
+            return arg1
+
+def correct_add_function(arg1, arg2):
+    arg1_index = 0 
+    while arg1_index < len(arg1):
+        arg1[arg1_index] = arg1[arg1_index] + arg2[arg1_index]
+        arg1_index +=1
+        return arg1
+
+def exception_add_function(arg1, arg2):
+    try:
+        for idx, val in enumerate(arg1):
+            if not isinstance(val, (int, str)):
+                raise TypeError(f"Your input argument 1 at element {idx} is not of the expected type. Please chnage this and rerun.")
+
+        for idx, val in enumerate(arg2):
+            if not isinstance(val, (int, str)):
+                raise TypeError(f"Your input argument 2 at element {idx} is not of the expected type. Please change this and rerun.")
+
+        if all(isinstance(i, int) for i in arg1) and all(isinstance(i, int) for i in arg2):
+            arg1_index = 0
+            while arg1_index < len(arg1):
+                arg1[arg1_index] = arg1[arg1_index] + arg2[arg1_index]
+                arg1_index += 1 
+            return arg1
+
+        elif all(isinstance(i, str) for i in arg1) and all(isinstance(i, str) for i in arg2):
+            arg1_index = 0
+            while arg1_index < len(arg1):
+                arg_2_sum = ' '
+                for arg2_elements in arg2:
+                    arg2_2_sum += arg2_elements
+                arg1[arg1_index] = arg1[arg1_index] + str(arg_2_sum)
+                arg1_index += 1
+            return arg1
+        else:
+            raise TypeError("Your input argument 2 at element 2 is not of the expected type. Please change this and rerun.")
+
+    except TypeError as e:
+        print(e)
+        return str(e)
+
+def correction_add_function(arg1, arg2):
+    a1 = list(arg1)
+    a2 = list(arg2)
+
+    try:
+        if all(isinstance(i, int) for i in a1) and all(isinstance(i, int) for i in a2):
+            arg1_index = 0
+            while arg1_index < len(a1):
+                a1[arg1_index] = a1[arg1_index] + a2[arg1_index]
+                arg1_index += 1
+            return a1
+
+        elif all(isinstance(i, str) for i in arg1) and all(isinstance(i, str) for i in arg2):
+            arg1_index = 0
+            while arg1_index < len(a1):
+                arg_2_sum = ' '
+                for arg2_elements in a2:
+                    arg2_2_sum += arg2_elements
+                a1[arg1_index] = a1[arg1_index] + str(arg_2_sum)
+                arg1_index += 1
+            return a1
+        else:
+            raise TypeError("Type Mismatch")
+
+    except TypeError:
+        a1 = [str(i) for i in a1]
+        a2 = [str(i) for i in a2]
+
+        arg1_index = 0 
+        while arg1_index < len(a1):
+            arg_2_sum = ' '
+            for arg2_elements in a2:
+                arg_2_sum += arg2_elements
+            a1[arg1_index] = a1[arg1_index] + str(arg_2_sum)
+            arg1_index += 1
+        return a1
+
+arg_str_1 = ['1', '2', '3']
+arg_str_2 = ['1', '1', 1]
+
+print("\n--- testing exception function ---")
+exception_add_function(arg_str_1, arg_str_2)
+
+print("\n--- testing Correction Function ---")
+print(correction_add_function(arg_str_1, arg_str_2))
