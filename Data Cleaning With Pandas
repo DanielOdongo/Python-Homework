@@ -1,0 +1,28 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+flights_data = pd.read_csv('/Users/danielodongo/Downloads/data/flights.csv')
+flights_data.head(10)
+weather_data_pd = pd.read_csv('/Users/danielodongo/Downloads/data/weather.csv')
+weather_data_np = weather_data_pd.to_numpy()
+
+flights_data['date'] = pd.to_datetime(flights_data[['year','month','day']]).dt.strftime('%Y/%m/%d')
+int(((flights_data['origin'] == 'JFK') & (flights_data['dest'] == 'SLC')).sum())
+int(flights_data[flights_data['dest'] == 'SLC']['carrier'].nunique())
+float(flights_data[flights_data['dest'] == 'RDU']['arr_delay'].mean())
+sea_flights = flights_data[flights_data['dest'] == 'SEA']
+float(len(sea_flights[sea_flights['origin'].isin(['LGA', 'JFK'])])/len(sea_flights))
+flights_data.groupby('date')['dep_delay'].mean().reset_index().sort_values(by='dep_delay',ascending=False).iloc[0]
+flights_data.groupby('date')['arr_delay'].mean().reset_index().sort_values(by='arr_delay', ascending=False).iloc[0]
+lga_jfk = flights_data[(flights_data['origin'].isin(['LGA', 'JFK'])) & (flights_data['year'] == 2013)].copy()
+lga_jfk['speed'] = lga_jfk['distance'] / lga_jfk['air_time']
+lga_jfk.sort_values(by='speed', ascending=False)[['tailnum','speed']].iloc[0]
+weather_data_pd.fillna(0)
+weather_cols = weather_data_pd.columns.tolist()
+month_idx = weather_cols.index('month')
+humid_idx = weather_cols.index('humid')
+int(np.sum(weather_data_np[:, month_idx] ==2))
+feb_mask = weather_data_np[:, month_idx] ==2
+float(np.nanmean(weather_data_np[feb_mask, humid_idx].astype(float)))
+float(np.nanstd(weather_data_np[feb_mask, humid_idx].astype(float)))
