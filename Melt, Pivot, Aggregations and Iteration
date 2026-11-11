@@ -1,0 +1,39 @@
+import pandas as pd
+
+file_path = "/Users/danielodongo/Downloads/arrhythmia/arrhythmia.data"
+df = pd.read_csv(file_path, header=None, low_memory=False)
+df.replace('?', pd.NA, inplace=True)
+df_subset = df.iloc[:, :10].copy()
+df_subset.columns = ['Age', 'Sex', 'Height', 'Weight', 'QRS_duration', 'P-R_interval', 'Q-T_interval', 'T_interval', 'P_interval', 'QRS']
+for col in df_subset.columns:
+    df_subset[col] = pd.to_numeric(df_subset[col], errors='coerce')
+df_subset.dropna(inplace=True)
+print("DataFrame loaded successfully. Shape:", df_subset.shape)
+df_subset.head()
+
+df_subset_sample = df_subset.head(5).copy().reset_index().rename(columns={'index': 'Patient_ID'})
+melted_df = pd.melt(
+    df_subset_sample, 
+    id_vars=['Patient_ID', 'Age', 'Sex'], 
+    value_vars=['Height', 'Weight'],
+    var_name='Measurement_Type', 
+    value_name='Measurement_Value'
+)
+print("--- Melted DataFrame ---")
+melted_df
+
+pivoted_df = melted_df.pivot(index=['Patient_ID', 'Age', 'Sex'], columns='Measurement_Type', values='Measurement_Value').reset_index()
+print("--- Pivoted DataFrame ---")
+pivoted_df
+
+agg_result = df_subset[['QRS_duration', 'P-R_interval', 'Q-T_interval']].agg(['mean', 'max'])
+print("--- Aggregation Results ---")
+agg_result
+
+print("--- Iterating through rows ---")
+for index, row in df_subset.head(3).iterrows():
+    print(f"Row {index} -> Age: {row['Age']}, Sex: {row['Sex']}, Weight: {row['Weight']}")
+
+groupby_result = df_subset.groupby('Sex')[['Height', 'Weight']].mean()
+print("--- Groupby Results ---")
+groupby_result
